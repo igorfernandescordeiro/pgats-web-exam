@@ -180,6 +180,7 @@ describe('Automation Exercise', () => {
 
     checkout.irParaPagamento();
 
+    // now I need to think WHERE I should create the method to fulfill the credit card
     // cy.get('[data-qa="name-on-card"]').type(faker.person.fullName())
     // cy.get('[data-qa="card-number"]').type(faker.finance.creditCardNumber())
     // cy.get('[data-qa="cvc"]').type(faker.finance.creditCardCVV())
