@@ -6,8 +6,10 @@ import menu from '../pages/menu';
 import popups from '../pages/popups';
 import carrinho from '../pages/carrinho';
 import checkout from '../pages/checkout';
+import pagamento from '../pages/pagamento';
+import home from '../pages/home';
 
-import { faker } from '@faker-js/faker' 
+// import { faker } from '@faker-js/faker'
 
 describe('Automation Exercise', () => {
 
@@ -16,7 +18,7 @@ describe('Automation Exercise', () => {
   })
 
   it('Test Case 1: Cadastrar um usuário', () => {
-    
+
     cadastro.preencherFormulario();
     cy.get('i.fa-user').parent().should('contain', Cypress.env('signUpName'));
 
@@ -26,10 +28,10 @@ describe('Automation Exercise', () => {
     // Triplo A - Arrange, Act, Assert
 
     // arrange - preparacao
-    
+
     menu.irParaCadastro();
 
-    
+
     login.preencherLogin('tester-1721346302730@mail.com', '12345');
 
     // assert - verificacao da saída do teste / comportamento esperado
@@ -152,7 +154,7 @@ describe('Automation Exercise', () => {
 
   });
 
-  it('Test Case 10: Verify Subscription in home page', () => {
+  it.only('Test Case 10: Verify Subscription in home page', () => {
     cy.get('input#susbscribe_email')
       .scrollIntoView()
       .type('tester-qa@mail.com')
@@ -163,35 +165,21 @@ describe('Automation Exercise', () => {
 
   });
 
-  it.only('Test Case 15: Place Order: Register before Checkout', () => {
-    cadastro.preencherFormulario()
-   
-    cy.contains("Add to cart")
-    .click()
-
-    popups.irParaVerCarrinho()
-
-    carrinho.irParaCheckout()
-
-    // cy.get('.heading').first().should('have.text', 'Address Details')
-    // cy.get('.heading').last().should('have.text', 'Review Your Order')
-    // cy.get('.form-control').type('378 98562-8781')
-    // cy.get('.btn-default.check_out').click()
-
+  it('Test Case 15: Place Order: Register before Checkout', () => {
+    cadastro.preencherFormulario();
+    home.clicarNoPrimeiroAdicionarAoCarrinho();
+    popups.irParaVerCarrinho();
+    carrinho.irParaCheckout();
     checkout.irParaPagamento();
+    pagamento.preencherCartaoConfirmarPedido();
 
-    // now I need to think WHERE I should create the method to fulfill the credit card
-    // cy.get('[data-qa="name-on-card"]').type(faker.person.fullName())
-    // cy.get('[data-qa="card-number"]').type(faker.finance.creditCardNumber())
-    // cy.get('[data-qa="cvc"]').type(faker.finance.creditCardCVV())
-    // cy.get('[data-qa="expiry-month"]').type(12)
-    // cy.get('[data-qa="expiry-year"]').type(2035)
-    // cy.get('[data-qa="pay-button"]').click()
-    // cy.get('[data-qa="order-placed"]').should('be.visible')
-    // cy.get('[href *="delete"]').click()
-    // cy.get('b').should('contain', 'Account Deleted!')
-    // cy.get('[data-qa="continue-button"]').click()
+    cy.get('[data-qa="order-placed"]').should('be.visible');
 
+    menu.clicarEmDeletarConta();
+
+    cy.get('b').should('contain', 'Account Deleted!')
+      .get('[data-qa="continue-button"]')
+      .click();
 
   });
 });

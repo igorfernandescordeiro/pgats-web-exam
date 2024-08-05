@@ -5,7 +5,6 @@ class Cadastro {
 
         Cypress.env('signUpName', signUpName);
 
-
         cy.contains('Signup').click()
         cy.get('[data-qa="signup-name"]').type(Cypress.env('signUpName'))
         cy.get('[data-qa="signup-email"]').type(`tester-${timestamp}@mail.com`)
@@ -28,13 +27,11 @@ class Cadastro {
         cy.get('[data-qa="zipcode"]').type('90001')
         cy.get('[data-qa="mobile_number"]').type('111 222 333')
         cy.get('[data-qa="create-account"]').click()
-
         cy.url().should('includes', 'account_created')
         cy.get('[data-qa="account-created"]').should('be.visible')
         cy.get('[data-qa="continue-button"]').click()
         return this;
     }
-
 };
 
 export default new Cadastro()

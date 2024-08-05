@@ -19,6 +19,11 @@ class Menu {
         return this;
     }
 
+    clicarEmDeletarConta(){
+        cy.get('[href *="delete"]').click()
+        return this;
+    }
+
     irPara(menu) {
         cy.contains(menu).click()
         return this;
