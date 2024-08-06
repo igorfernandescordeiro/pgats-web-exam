@@ -32,6 +32,25 @@ class Cadastro {
         cy.get('[data-qa="continue-button"]').click()
         return this;
     }
+
+    preencherNome(nome) {
+        cy.get('[data-qa="signup-name"]')
+            .type(nome)
+        return this;
+    }
+
+    preencherEmailExistente() {
+        cy.get('[data-qa="signup-email"]')
+            .type(`tester-1722907186321@mail.com`)
+        return this;
+    }
+
+    clicarEmSignup() {
+        cy.contains('button', 'Signup')
+            .click()
+        return this;
+    }
+
 };
 
 export default new Cadastro()

@@ -8,8 +8,8 @@ import carrinho from '../pages/carrinho';
 import checkout from '../pages/checkout';
 import pagamento from '../pages/pagamento';
 import home from '../pages/home';
-
-// import { faker } from '@faker-js/faker'
+import produtos from '../pages/produtos';
+import faleconosco from '../pages/faleconosco';
 
 describe('Automation Exercise', () => {
 
@@ -18,135 +18,106 @@ describe('Automation Exercise', () => {
   })
 
   it('Test Case 1: Cadastrar um usuário', () => {
-
     cadastro.preencherFormulario();
-    cy.get('i.fa-user').parent().should('contain', Cypress.env('signUpName'));
+
+    cy.get('i.fa-user')
+      .parent()
+      .should('contain', Cypress.env('signUpName'));
 
   });
 
   it('Test Case 2: Login User with correct email and password', () => {
-    // Triplo A - Arrange, Act, Assert
-
-    // arrange - preparacao
-
     menu.irParaCadastro();
+    login.preencherLogin('tester-1722907186321@mail.com', '12345');
 
-
-    login.preencherLogin('tester-1721346302730@mail.com', '12345');
-
-    // assert - verificacao da saída do teste / comportamento esperado
-
-    cy.get('i.fa-user').parent().should('contain', 'Tester QA')
-
+    cy.get('i.fa-user')
+      .parent()
+      .should('contain', 'Testar QA')
   });
 
   it('Test Case 3: Login User with incorrect email and password', () => {
-    // Triplo A - Arrange, Act, Assert
-
-    // arrange - preparacao
-
     menu.irParaCadastro();
-
-    // act - acao principal
     login.preencherLogin('tester-1721346302730@mail.com', '54321');
 
-    // assert - verificacao da saída do teste / comportamento esperado
-
-    // cy.get(`.login-form form p`).should('contain', 'Your email or password is incorrect!')
-    cy.get('p').should('contain', 'Your email or password is incorrect!')
+    cy.get('p')
+      .should('contain', 'Your email or password is incorrect!');
   });
 
   it('Test Case 4: Logout User', () => {
-    // Triplo A - Arrange, Act, Assert
+    menu.irParaCadastro();
+    login.preencherLogin('tester-1722907186321@mail.com', '12345');
 
-    // arrange - preparacao
+    cy.get('i.fa-user')
+      .parent()
+      .should('contain', 'Testar QA')
 
-    // cy.contains('Signup').click()
-    // menu.irParaCadastro();
-    menu.irPara(menu.menus.CADASTRO);
+    menu.clicarEmLogout()
 
-    login.preencherLogin('tester-1721346302730@mail.com', '12345');
-
-    cy.get('i.fa-user').parent().should('contain', 'Tester QA')
-
-    // act - acao principal
-    cy.contains('Logout').click()
-
-    // assert - verificacao da saída do teste / comportamento esperado
-    cy.url().should('contain', 'login')
-    cy.contains("Login to your account").should("be.visible");
+    cy.url()
+      .should('contain', 'login')
+    cy.contains("Login to your account")
+      .should("be.visible");
 
   });
 
   it('Test Case 5: Register User with existing email', () => {
-    // cy.contains('Signup').click()
     menu.irParaCadastro();
+    cadastro.preencherNome('Teste QA')
+      .preencherEmailExistente()
+      .clicarEmSignup()
 
-    cy.get('[data-qa="signup-name"]').type(`Tester QA`)
-    cy.get('[data-qa="signup-email"]').type(`tester-1721346302730@mail.com`)
-    cy.contains('button', 'Signup').click()
-
-    // assert
     cy.get(`.signup-form form p`)
       .should('be.visible')
       .and('contain', 'Email Address already exist!')
   });
 
   it('Test Case 6: Contact Us Form', () => {
-    // cy.contains(`Contact us`).click()
     menu.irParaEntreEmContato();
 
     cy.get(`.contact-form h2`)
       .should('be.visible')
       .and('have.text', 'Get In Touch')
 
-    cy.get('[data-qa="name"]').type(`Tester`)
-    cy.get('[data-qa="email"]').type(`tester-qa@mail.com`)
-    cy.get('[data-qa="subject"]').type(`Test Automation`)
-    cy.get('[data-qa="message"]').type(`Learning Test Automation`)
+    faleconosco.preencherFormulario('Tester', 'tester-qa@mail.com', 'Test Automation', 'Learning Test Automation')
+      .enviarArquivo()
+      .clicarEmEnviar()
 
-    cy.fixture('example.json').as('arquivo')
-    cy.get('input[name="upload_file"]').selectFile('@arquivo')
-
-    cy.get('[data-qa="submit-button"]').click()
-
-    cy.get('.status').should('have.text', 'Success! Your details have been submitted successfully.')
+    cy.get('.status')
+      .should('have.text', 'Success! Your details have been submitted successfully.')
   });
 
   it('Test Case 8: Verify All Products and product detail page', () => {
-    // cy.contains(`Products`).click()
     menu.irParaProdutos();
 
-    cy.url().should('contain', 'products')
-    cy.get('.title').should('be.visible').and('contain', 'All Products')
-
-    cy.get('.single-products')
+    cy.url()
+      .should('contain', 'products')
+    cy.get('.title')
       .should('be.visible')
-      .and('have.length.at.least', 1)
-      .first()
-      .parent()
-      .contains('View Product')
-      .click()
+      .and('contain', 'All Products')
 
-    // cy.contains('View Product').first().click()
-    // product name, category, price, availability, condition, brand
-    cy.get('.product-information > h2').should('be.visible')
-    cy.get('.product-information p').should('be.visible').and('have.length', 4)
-    cy.get('.product-information span span').should('be.visible')
+    produtos.verDetalhePrimeiroProduto()
+
+    cy.get('.product-information > h2')
+      .should('be.visible')
+    cy.get('.product-information p')
+      .should('be.visible').and('have.length', 4)
+    cy.get('.product-information span span')
+      .should('be.visible')
 
   });
 
   it('Test Case 9: Search Product', () => {
-    // cy.contains(`Products`).click()
     menu.irParaProdutos();
 
     cy.url().should('contain', 'products')
     cy.get('.title').should('be.visible').and('contain', 'All Products')
 
-    cy.get('input#search_product').type('Shirt')
-    cy.get('button#submit_search').click()
+    produtos.informarProduto('Shirt')
+      .pesquisarProduto()
 
-    cy.get('.title').should('be.visible').and('contain', 'Searched Products')
+    cy.get('.title')
+      .should('be.visible')
+      .and('contain', 'Searched Products')
 
     cy.get('.single-products')
       .should('be.visible')
@@ -154,14 +125,12 @@ describe('Automation Exercise', () => {
 
   });
 
-  it.only('Test Case 10: Verify Subscription in home page', () => {
-    cy.get('input#susbscribe_email')
-      .scrollIntoView()
-      .type('tester-qa@mail.com')
+  it('Test Case 10: Verify Subscription in home page', () => {
+    home.informarEmailNoCampoSubscription('tester-qa@mail.com')
+      .clicarNoBotaoSubscription()
 
-    cy.get('button#subscribe').click()
-
-    cy.contains('You have been successfully subscribed!').should('be.visible')
+    cy.contains('You have been successfully subscribed!')
+      .should('be.visible')
 
   });
 
@@ -173,13 +142,13 @@ describe('Automation Exercise', () => {
     checkout.irParaPagamento();
     pagamento.preencherCartaoConfirmarPedido();
 
-    cy.get('[data-qa="order-placed"]').should('be.visible');
+    cy.get('[data-qa="order-placed"]')
+      .should('be.visible');
 
     menu.clicarEmDeletarConta();
 
     cy.get('b').should('contain', 'Account Deleted!')
       .get('[data-qa="continue-button"]')
       .click();
-
   });
 });

@@ -1,31 +1,31 @@
 class Menu {
-    menus = {
-        PRODUTOS: 'Products',
-        CADASTRO: 'Signup',
-        ENTRE_EM_CONTATO:'Contact us'
-    }
-    irParaProdutos(){
-        cy.contains(`Products`).click()
+    irParaProdutos() {
+        cy.contains(`Products`)
+            .click()
         return this;
     }
 
-    irParaCadastro(){
-        cy.contains(`Signup`).click()
+    irParaCadastro() {
+        cy.contains(`Signup`)
+            .click()
         return this;
     }
 
-    irParaEntreEmContato(){
-        cy.contains(`Contact us`).click()
+    irParaEntreEmContato() {
+        cy.contains(`Contact us`)
+            .click()
         return this;
     }
 
-    clicarEmDeletarConta(){
-        cy.get('[href *="delete"]').click()
+    clicarEmDeletarConta() {
+        cy.get('[href *="delete"]')
+            .click()
         return this;
     }
 
-    irPara(menu) {
-        cy.contains(menu).click()
+    clicarEmLogout() {
+        cy.contains('Logout')
+            .click()
         return this;
     }
 };
