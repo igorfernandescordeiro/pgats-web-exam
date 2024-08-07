@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress open",
-    "headless": "npx cypress run"
+    "headlessWithReport": "npx cypress run",
+    "browserStack":"browserstack-cypress run"
   },
   "keywords": [],
   "author": "",
